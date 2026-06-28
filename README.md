@@ -2,7 +2,7 @@
 
 **Empirical analysis of commodity diversification benefits using DCC-GARCH, Markov Regime-Switching, Hidden Markov Models, and CVaR Portfolio Optimization on 20 years of weekly data (2005–2025).**
 
-*SF Club USI — Andrea Botta & Gianluca Ladelfa — June 2026*
+*Starting Finance Club USI — Andrea Botta & Gianluca Ladelfa — June 2026*
 
 ---
 
