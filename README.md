@@ -12,6 +12,15 @@ This project investigates whether commodities provide genuine diversification be
 
 ---
 
+## Authors
+
+**Andrea Botta** — BSc Economics, Università della Svizzera italiana (USI)  
+**Gianluca Ladelfa** — BSc Economics, Università della Svizzera italiana (USI)  
+
+*SF Club USI — Student Finance Club*
+
+---
+
 ## Methodology
 
 | Layer | Method | Purpose |
@@ -157,15 +166,6 @@ arch · fredapi · hmmlearn · matplotlib · numpy · pandas
 pyportfolioopt · scikit-learn · scipy · shap · statsmodels
 xgboost · yfinance
 ```
-
----
-
-## Authors
-
-**Andrea Botta** — BSc Economics, Università della Svizzera italiana (USI)  
-**Gianluca Ladelfa** — BSc Economics, Università della Svizzera italiana (USI)  
-
-*SF Club USI — Student Finance Club*
 
 ---
 
