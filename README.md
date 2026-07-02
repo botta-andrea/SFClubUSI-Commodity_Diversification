@@ -16,15 +16,15 @@ This project investigates whether commodities provide genuine diversification be
 
 | Layer | Method | Purpose |
 |---|---|---|
-| Volatility modeling | GARCH(1,1) | Conditional variance estimation per asset |
-| Regime detection | Markov Regime-Switching (2-state) | Identify S&P 500 bull/bear regimes |
-| Correlation dynamics | DCC-GARCH (Engle, 2002) | Time-varying conditional correlations |
-| Regime prediction | Hidden Markov Model (HMM) | Unsupervised correlation regime detection |
-| Forecasting | Random Forest + Stacked Ensemble | Predict next-period DCC correlation |
-| Feature attribution | SHAP values | Interpretability of RF predictions |
-| Portfolio construction | Min-CVaR vs Min-Volatility | Tail-risk-aware allocation |
-| Sentiment signal | COT Report (CFTC) | Managed money positioning z-scores |
-| Causality testing | Granger Causality | VIX → DCC transmission |
+| Volatility modeling | GARCH(1,1) | Conditional variance estimation per asset (Bollerslev, 1986) |
+| Regime detection | Markov Regime-Switching (2-state & 3-state) | S&P 500 bull/bear identification & Gold conditional states |
+| Correlation dynamics | DCC-GARCH (Engle, 2002) | Time-varying conditional commodity-equity & commodity-fiat correlations |
+| Regime prediction | Hidden Markov Model (HMM) | Unsupervised correlation regime detection (high vs. low integration) |
+| Forecasting | Random Forest + Stacked Ensemble | Predict next-period DCC correlation trajectories |
+| Feature attribution | SHAP values | Interpretability and economic attribution of Random Forest predictions |
+| Portfolio construction | Min-CVaR vs Min-Volatility | Tail-risk-aware asset allocation (Rockafellar & Uryasev, 2000) |
+| Sentiment signal | COT Report (CFTC) | Managed money net positioning rolling Z-scores |
+| Causality testing | Granger Causality | Financial transmission testing (VIX $\to$ DCC) |
 
 ---
 
@@ -33,23 +33,22 @@ This project investigates whether commodities provide genuine diversification be
 | Source | Series | Frequency |
 |---|---|---|
 | Yahoo Finance (`yfinance`) | S&P 500, DXY, Copper, Silver, Gold, Wheat, Nat. Gas, 10Y Treasury | Weekly |
-| FRED (St. Louis Fed) | Industrial Production, Manufacturing Employment, VIX, Fed Funds Rate, CPI | Monthly → resampled weekly |
-| CFTC (cot.gov) | COT Disaggregated Report — Managed Money positions | Weekly (2010–2025) |
+| FRED (St. Louis Fed) | Industrial Production, Manufacturing Employment, VIX, Fed Funds Rate, CPI | Monthly $\to$ resampled weekly |
+| CFTC (cot.gov) | COT Disaggregated Report — Managed Money positions | Weekly |
 
-**Sample period:** 2005-01-01 → 2025-12-31 (main dataset, ~1,040 weeks)  
-**ML/COT dataset:** 2010-01-01 → 2025-12-31 (~800 weeks)
+*   **Main Dataset (Core Analysis):** 1,057 weeks spanning from **2005-01-06 to 2025-12-25** [1].
+*   **ML/COT Dataset (COT Focus):** 597 weeks spanning from **2013-01-17 to 2024-11-07** [2].
 
 ---
 
 ## Key Results
 
-- Gold and Copper exhibit **time-varying, regime-dependent** correlations with S&P 500: near-zero in bull markets, negative during crises
-- The **DXY factor** amplifies commodity sell-offs — strong dollar periods coincide with depressed commodity-equity correlations
-- HMM correctly identifies **high-integration regimes** (GFC 2008, COVID 2020, Ukraine 2022) without supervision
-- Min-CVaR portfolios allocate significantly more to **Gold** relative to Min-Volatility, reflecting tail-risk hedging demand
-- Random Forest achieves **R² > 0.85** in predicting next-week DCC correlations; COT z-scores are the most important feature (SHAP)
+*   **Regime-Dependent Decoupling:** Gold maintains a persistently near-zero conditional correlation with equities across both Markov regimes ($\bar{\rho}_{\text{bull}} = +0.065$, $\bar{\rho}_{\text{bear}} = +0.068$), strictly validating its role as a structural safe haven [3]. Conversely, copper exhibits a procyclical co-movement ($\bar{\rho} = +0.370$) that dynamically intensifies to $+0.385$ during bear markets, illustrating the diversification paradox [3].
+*   **The Dollar Anchor:** Commodity-DXY conditional correlations are structurally negative. Heatmap and sub-period analyses reveal that precious and industrial metals act as powerful fiat hedges, with gold and copper averaging DCC correlations of $-0.478$ and $-0.351$ respectively, remaining stable even during periods of pronounced dollar strength [4, 5].
+*   **Unsupervised Regime Detection:** The Hidden Markov Model (HMM) successfully identifies systemic **high-integration regimes** corresponding to major macro-financial shocks (GFC 2008, COVID-19 2020, Ukraine War 2022) without requiring prior label supervision.
+*   **Tail-Risk Hedging:** Incorporating gold significantly enhances portfolio metrics. While a classic minimum-volatility portfolio allocates roughly $41.2\%$ to gold, the tail-risk-aware **minimum-CVaR** optimization shifts weights away from equities (reducing S&P 500 from $48\%$ to $38\%$) to increase gold exposure to **$46\%$**, providing superior downside protection.
+*   **ML Correlation Predictability:** Predicting time-varying DCC correlations proves highly challenging due to extreme autoregressive persistence. The Naive AR(1) baseline slightly outperforms the tuned Random Forest in overall variance explained ($R^2 = 0.783$ vs. $0.763$) [6]. However, SHAP feature attributions show that macro-financial features—specifically HMM high-integration probabilities and CFTC COT speculative positioning—are critical for successfully timing non-linear structural breakouts that a univariate baseline is blind to.
 
----
 
 ## Notebook Structure
 
